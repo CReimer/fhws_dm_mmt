@@ -22,6 +22,14 @@ public:
 
 private:
     vector<vector<RGBPixel>> image;
+    int x;
+public:
+    int getX() const;
+
+    int getY() const;
+
+private:
+    int y;
 };
 
 #endif //DM_MMT_PPM_H

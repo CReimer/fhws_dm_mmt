@@ -1,16 +1,12 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
-#include <sstream>
-#include <iterator>
-#include <boost/algorithm/string/classification.hpp> // Include boost::for is_any_of
-#include <boost/algorithm/string/split.hpp> // Include for boost::split
 
 #include "main.h"
 #include "RGBPixel.h"
 #include "YCbCrPixel.h"
 #include "Ppm.h"
 #include "Bitstream.h"
+#include "Jpeg.h"
 
 using namespace std;
 
@@ -67,17 +63,21 @@ vector<vector<Subsample>> subsample420(vector<vector<YCbCrPixel>> input) {
 }
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+//    std::cout << "Hello, World!" << std::endl;
     Ppm PpmImageObj;
     PpmImageObj.readFile("test.ppm");
 
-    vector<vector<RGBPixel>> picture = PpmImageObj.getRgbImage();
+//    vector<vector<RGBPixel>> picture = PpmImageObj.getRgbImage();
     vector<vector<YCbCrPixel>> ypicture = PpmImageObj.getYCbCrImage();
     subsample420(ypicture);
 
-    Bitstream bitstreamObj;
-    bitstreamObj.readFile("./test.jpg");
-    bitstreamObj.writeFile("./output.jpg");
+    Bitstream emptyStream;
+    Jpeg jpegGenerator(&emptyStream);
+    jpegGenerator.setSoi();
+    jpegGenerator.setApp0();
+    jpegGenerator.setSof0(PpmImageObj.getX(), PpmImageObj.getY(),4,2,0);
+    jpegGenerator.setEoi();
+    emptyStream.writeFile(("./test2.jpg"));
 
     return 0;
 }

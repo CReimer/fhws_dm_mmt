@@ -26,6 +26,8 @@ void Ppm::readFile(string filename) {
 
     unsigned int maxX = (unsigned int) stoi(words.at(0));
     unsigned int maxY = (unsigned int) stoi(words.at(1));
+    Ppm::x = maxX;
+    Ppm::y = maxY;
 
     vector<vector<RGBPixel>> framebuffer(maxX, vector<RGBPixel>(maxY));
 
@@ -88,4 +90,12 @@ vector<vector<YCbCrPixel>> Ppm::getYCbCrImage() {
 
 
     return framebuffer;
+}
+
+int Ppm::getX() const {
+    return x;
+}
+
+int Ppm::getY() const {
+    return y;
 }

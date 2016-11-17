@@ -5,6 +5,9 @@
 #ifndef DM_MMT_BITSTREAM_H
 #define DM_MMT_BITSTREAM_H
 
+#include <vector>
+#include <string>
+
 using namespace std;
 
 class Bitstream {
@@ -15,12 +18,17 @@ public:
 
     void writeFile(string filename);
 
-    void appendAtBeginning(bool);
+    void appendBitAtBeginning(bool);
 
-    void appendAtEnd(bool);
+    void appendBitAtEnd(bool);
+
+    void appendByteAtEnd(char);
 
 private:
     vector<bool> bitstream;
+
+    vector<bool> byte2bit(char byte);
+    void bit2byte(vector<bool>);
 
 };
 

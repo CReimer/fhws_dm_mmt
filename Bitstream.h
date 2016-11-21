@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include <array>
 
 using namespace std;
 
@@ -18,17 +19,19 @@ public:
 
     void writeFile(string filename);
 
-    void appendBitAtBeginning(bool);
+    void appendBit(bool);
 
-    void appendBitAtEnd(bool);
+    void prependBit(bool);
 
-    void appendByteAtEnd(char);
+    void appendByte(char);
+
+    void finalizeBits();
 
 private:
-    vector<bool> bitstream;
+    vector<char> bytes;
+    vector<bool> bits;
 
-    vector<bool> byte2bit(char byte);
-    void bit2byte(vector<bool>);
+    char bit2byte(array<bool, 8>);
 
 };
 

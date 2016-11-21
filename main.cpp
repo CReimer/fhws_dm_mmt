@@ -75,9 +75,29 @@ int main() {
     Jpeg jpegGenerator(&emptyStream);
     jpegGenerator.setSoi();
     jpegGenerator.setApp0();
-    jpegGenerator.setSof0(PpmImageObj.getX(), PpmImageObj.getY(),4,2,0);
+    jpegGenerator.setSof0(PpmImageObj.getX(), PpmImageObj.getY(),4,2,2);
     jpegGenerator.setEoi();
     emptyStream.writeFile(("./test2.jpg"));
+
+//    Bitstream test;
+//    test.appendBit(1);
+//    test.appendBit(0);
+//    test.appendBit(1);
+//    test.appendBit(0);
+//    test.appendBit(1);
+//    test.appendBit(0);
+//    test.appendBit(1);
+//    test.appendBit(0);
+//
+//    test.appendBit(1);
+//    test.appendBit(0);
+//    test.appendBit(1);
+//    test.appendBit(0);
+//    test.appendBit(1);
+//    test.appendBit(0);
+//    test.finalizeBits();
+//    test.readFile("./test.ppm");
+//    test.writeFile("./test2.ppm");
 
     return 0;
 }

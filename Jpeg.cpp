@@ -77,8 +77,8 @@ void Jpeg::setApp0() {
 void Jpeg::setSoi() {
     char header[2] = {(char) 0xFF, (char) 0xD8};
 
-    Jpeg::bitstream->appendByteAtEnd(header[0]);
-    Jpeg::bitstream->appendByteAtEnd(header[1]);
+    Jpeg::bitstream->appendByte(header[0]);
+    Jpeg::bitstream->appendByte(header[1]);
 
 }
 
@@ -89,13 +89,13 @@ Jpeg::Jpeg(Bitstream *bitstream) {
 void Jpeg::setEoi() {
     char header[2] = {(char) 0xFF, (char) 0xD9};
 
-    Jpeg::bitstream->appendByteAtEnd(header[0]);
-    Jpeg::bitstream->appendByteAtEnd(header[1]);
+    Jpeg::bitstream->appendByte(header[0]);
+    Jpeg::bitstream->appendByte(header[1]);
 }
 
 void Jpeg::writeArray(vector<unsigned char> array) {
     for (int i = 0; i < array.size(); i++) {
 //        cout << array[i] << "\n";
-        Jpeg::bitstream->appendByteAtEnd((char) array[i]);
+        Jpeg::bitstream->appendByte((char) array[i]);
     }
 }

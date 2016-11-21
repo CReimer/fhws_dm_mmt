@@ -60,7 +60,7 @@ void Bitstream::finalizeBits() {
     for (int i = 0; i < Bitstream::bits.size(); i++) {
         if (j == 8) {
             j = 0;
-            Bitstream::bit2byte(bytecache);
+            Bitstream::appendByte(Bitstream::bit2byte(bytecache));
             bytecache.fill(0);
         }
         bytecache[j] = Bitstream::bits[i];

@@ -67,4 +67,5 @@ void Bitstream::finalizeBits() {
         j++;
     }
     Bitstream::appendByte(Bitstream::bit2byte(bytecache));
+    Bitstream::bits.empty();
 }

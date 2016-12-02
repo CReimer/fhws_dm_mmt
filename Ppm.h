@@ -22,6 +22,7 @@ public:
 
 private:
     vector<vector<RGBPixel>> image;
+    vector<string> splitLine(string input);
     int x;
 public:
     int getX() const;

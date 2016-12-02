@@ -4,8 +4,6 @@
 
 #include <fstream>
 #include <vector>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
 #include "Ppm.h"
 
 using namespace std;
@@ -21,8 +19,7 @@ void Ppm::readFile(string filename) {
         getline(ifs, line);
     }
 
-    vector<string> words;
-    boost::split(words, line, boost::is_any_of(" "), boost::token_compress_on);
+    vector<string> words = splitLine(line);
 
     unsigned int maxX = (unsigned int) stoi(words.at(0));
     unsigned int maxY = (unsigned int) stoi(words.at(1));
@@ -35,17 +32,8 @@ void Ppm::readFile(string filename) {
 
     vector<string> colors;
     while (getline(ifs, line)) {
-        string temp;
-        for (int i = 0; i < line.length(); i++) {
-            if (isdigit(line[i])) {
-                temp.push_back(line[i]);
-            } else {
-                if (!temp.empty()) {
-                    colors.push_back(temp);
-                    temp.clear();
-                }
-            }
-        }
+        vector<string> temp = splitLine(line);
+        colors.insert(colors.end(), temp.begin(), temp.end());
     }
 
     for (int color = 0; color < colors.size(); color++) {
@@ -98,4 +86,20 @@ int Ppm::getX() const {
 
 int Ppm::getY() const {
     return y;
+}
+
+vector<string> Ppm::splitLine(string line) {
+    vector<string> words;
+    string temp;
+    for (int i = 0; i <= line.length(); i++) {
+        if (isdigit(line[i])) {
+            temp.push_back(line[i]);
+        } else {
+            if (!temp.empty()) {
+                words.push_back(temp);
+                temp.clear();
+            }
+        }
+    }
+    return words;
 }

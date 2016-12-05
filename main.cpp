@@ -7,6 +7,7 @@
 #include "Ppm.h"
 #include "Bitstream.h"
 #include "Jpeg.h"
+#include "Huffman/Tree.h"
 
 using namespace std;
 
@@ -63,21 +64,27 @@ vector<vector<Subsample>> subsample420(vector<vector<YCbCrPixel>> input) {
 }
 
 int main() {
+    Tree test;
+    test.generateHuffman("Dies ist ein Teststring");
+
+
+
+
 //    std::cout << "Hello, World!" << std::endl;
-    Ppm PpmImageObj;
-    PpmImageObj.readFile("test.ppm");
+//    Ppm PpmImageObj;
+//    PpmImageObj.readFile("test.ppm");
 
 //    vector<vector<RGBPixel>> picture = PpmImageObj.getRgbImage();
-    vector<vector<YCbCrPixel>> ypicture = PpmImageObj.getYCbCrImage();
-    subsample420(ypicture);
+//    vector<vector<YCbCrPixel>> ypicture = PpmImageObj.getYCbCrImage();
+//    subsample420(ypicture);
 
-    Bitstream emptyStream;
-    Jpeg jpegGenerator(&emptyStream);
-    jpegGenerator.setSoi();
-    jpegGenerator.setApp0();
-    jpegGenerator.setSof0(PpmImageObj.getX(), PpmImageObj.getY(),4,2,2);
-    jpegGenerator.setEoi();
-    emptyStream.writeFile(("./test2.jpg"));
+//    Bitstream emptyStream;
+//    Jpeg jpegGenerator(&emptyStream);
+//    jpegGenerator.setSoi();
+//    jpegGenerator.setApp0();
+//    jpegGenerator.setSof0(PpmImageObj.getX(), PpmImageObj.getY(),4,2,2);
+//    jpegGenerator.setEoi();
+//    emptyStream.writeFile(("./test2.jpg"));
 
 //    Bitstream test;
 //    test.appendBit(1);

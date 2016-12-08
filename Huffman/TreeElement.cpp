@@ -4,17 +4,8 @@
 
 #include "TreeElement.h"
 
-void TreeElement::setBase(TreeElement *base) {
-    TreeElement::base = base;
-}
-
-void TreeElement::setLeft(const char &left) {
-    TreeElement::left = left;
-    TreeElement::leftSet = true;
-}
-
-char TreeElement::getLeft() const {
-    return left;
+bool TreeElement::isValueSet() const {
+    return valueSet;
 }
 
 bool TreeElement::isLeftSet() const {
@@ -32,5 +23,29 @@ TreeElement *TreeElement::getRight() const {
 
 bool TreeElement::isRightSet() const {
     return rightSet;
+}
+
+char TreeElement::getValue() const {
+    return value;
+}
+
+void TreeElement::setValue(char value) {
+    TreeElement::value = value;
+    TreeElement::valueSet = true;
+}
+
+void TreeElement::setLeft(TreeElement *left) {
+    TreeElement::left = left;
+    TreeElement::leftSet = true;
+}
+
+TreeElement *TreeElement::getLeft() const {
+    return left;
+}
+
+TreeElement::TreeElement() {
+    TreeElement::leftSet = false;
+    TreeElement::valueSet = false;
+    TreeElement::rightSet = false;
 }
 

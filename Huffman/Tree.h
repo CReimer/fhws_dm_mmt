@@ -11,6 +11,8 @@
 
 using namespace std;
 
+
+
 class Tree {
 private:
 
@@ -22,10 +24,17 @@ private:
 
     Bitstream huffman;
 public:
-    void setHuffman(const Bitstream &huffman);
+    Tree();
+
     Bitstream encodeHuffman();
+
     void generateDictionary();
+    void generateDictionary(int maxDepth);
+
     string decodeHuffman();
+
+    void setHuffman(const Bitstream &huffman);
+
     void setInputString(const string &inputString);
 };
 

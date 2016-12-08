@@ -10,26 +10,38 @@
 using namespace std;
 
 class TreeElement {
+public:
+    TreeElement();
+
 private:
-    TreeElement *base;
-    char left;
+    char value;
+
+    bool valueSet = false;
+
+    TreeElement *left;
     bool leftSet = false;
+
     TreeElement *right;
+
     bool rightSet = false;
 public:
     bool isRightSet() const;
-
-    char getLeft() const;
-
-    void setLeft(const char &left);
 
     TreeElement *getRight() const;
 
     void setRight(TreeElement *right);
 
-    void setBase(TreeElement *base);
-
     bool isLeftSet() const;
+
+    bool isValueSet() const;
+
+    char getValue() const;
+
+    void setValue(char value);
+
+    TreeElement *getLeft() const;
+
+    void setLeft(TreeElement *left);
 };
 
 

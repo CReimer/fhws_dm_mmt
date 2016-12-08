@@ -7,6 +7,10 @@
 #include <unordered_map>
 #include "Tree.h"
 
+Tree::Tree() {
+    Tree::basis = new TreeElement();
+}
+
 string Tree::sortInputElements(string input) {
     unordered_map<char, unsigned int> count;
 
@@ -32,7 +36,7 @@ void Tree::generateDictionary() {
     TreeElement *current = Tree::basis;
     for (char character: sorted) {
         TreeElement *next = new TreeElement;
-        current->setLeft(character);
+        current->setValue(character);
         current->setRight(next);
         current = next;
     }
@@ -42,15 +46,24 @@ Bitstream Tree::encodeHuffman() {
     Bitstream output;
     for (char character: Tree::inputString) {
         TreeElement *current = Tree::basis;
-        while (current->isRightSet()) {
-            if (current->getLeft() == character) {
+        TreeElement *tempBase = Tree::basis;
+        while (current->isValueSet()) {
+            if (current->getValue() == character) {
                 output.appendBit(1);
                 break;
             } else {
                 output.appendBit(0);
-                current = current->getRight();
+                if (current->isRightSet()) {
+                    current = current->getRight();
+                } else {
+                    current = tempBase;
+                    if (tempBase->isLeftSet())
+                        tempBase = tempBase->getLeft();
+                }
+
             }
         }
+
     }
     Tree::huffman = output;
     return output;
@@ -61,7 +74,7 @@ string Tree::decodeHuffman() {
     TreeElement *current = Tree::basis;
     for (bool character: Tree::huffman.getBits()) {
         if (character) {
-            output += current->getLeft();
+            output += current->getValue();
             current = Tree::basis;
         } else {
             current = current->getRight();
@@ -77,4 +90,34 @@ void Tree::setInputString(const string &inputString) {
 
 void Tree::setHuffman(const Bitstream &huffman) {
     Tree::huffman = huffman;
+}
+
+void Tree::generateDictionary(int maxDepth) {
+    int currentDepth = 0;
+    string sorted = sortInputElements(Tree::inputString);
+    TreeElement *current = Tree::basis;
+    for (char character: sorted) {
+        TreeElement *next = new TreeElement;
+        current->setValue(character);
+
+        if (currentDepth >= maxDepth) {
+            TreeElement *temp = Tree::basis;
+            currentDepth = 0;
+            while (temp->isLeftSet()) {
+                temp = temp->getLeft();
+                currentDepth++;
+                if (currentDepth >= maxDepth) {
+                    throw "No space left";
+                }
+            }
+            temp->setLeft(next);
+            current = temp->getLeft();
+//            currentDepth++;
+
+        } else {
+            current->setRight(next);
+            current = next;
+        }
+        currentDepth++;
+    }
 }

@@ -66,9 +66,9 @@ vector<vector<Subsample>> subsample420(vector<vector<YCbCrPixel>> input) {
 int main() {
     Tree test;
     test.setInputString("Dies ist ein Teststring");
-    test.generateDictionary();
+    test.generateDictionary(4);
     test.encodeHuffman();
-    test.decodeHuffman();
+//    test.decodeHuffman();
 
 
 //    std::cout << "Hello, World!" << std::endl;

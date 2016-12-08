@@ -7,13 +7,6 @@
 #include <unordered_map>
 #include "Tree.h"
 
-Bitstream Tree::generateHuffman(string input) {
-    Tree::inputString = input;
-    string tableBase = sortInputElements(input);
-    Tree::generateDictionary(tableBase);
-    return Tree::encodeHuffman(Tree::inputString);
-}
-
 string Tree::sortInputElements(string input) {
     unordered_map<char, unsigned int> count;
 
@@ -34,7 +27,8 @@ string Tree::sortInputElements(string input) {
     return output;
 }
 
-void Tree::generateDictionary(string sorted) {
+void Tree::generateDictionary() {
+    string sorted = sortInputElements(Tree::inputString);
     TreeElement *current = Tree::basis;
     for (char character: sorted) {
         TreeElement *next = new TreeElement;
@@ -44,9 +38,9 @@ void Tree::generateDictionary(string sorted) {
     }
 }
 
-Bitstream Tree::encodeHuffman(string input) {
+Bitstream Tree::encodeHuffman() {
     Bitstream output;
-    for (char character: input) {
+    for (char character: Tree::inputString) {
         TreeElement *current = Tree::basis;
         while (current->isRightSet()) {
             if (current->getLeft() == character) {
@@ -58,13 +52,14 @@ Bitstream Tree::encodeHuffman(string input) {
             }
         }
     }
+    Tree::huffman = output;
     return output;
 }
 
-string Tree::decodeHuffman(Bitstream input) {
+string Tree::decodeHuffman() {
     string output;
     TreeElement *current = Tree::basis;
-    for (bool character: input.getBits()) {
+    for (bool character: Tree::huffman.getBits()) {
         if (character) {
             output += current->getLeft();
             current = Tree::basis;
@@ -74,4 +69,12 @@ string Tree::decodeHuffman(Bitstream input) {
 
     }
     return output;
+}
+
+void Tree::setInputString(const string &inputString) {
+    Tree::inputString = inputString;
+}
+
+void Tree::setHuffman(const Bitstream &huffman) {
+    Tree::huffman = huffman;
 }

@@ -18,17 +18,15 @@ private:
 
     string sortInputElements(string);
 
-    void generateDictionary(string);
-
     TreeElement *basis;
 
-    Bitstream encodeHuffman(string);
-
-
+    Bitstream huffman;
 public:
-    Bitstream generateHuffman(string);
-
-    string decodeHuffman(Bitstream);
+    void setHuffman(const Bitstream &huffman);
+    Bitstream encodeHuffman();
+    void generateDictionary();
+    string decodeHuffman();
+    void setInputString(const string &inputString);
 };
 
 

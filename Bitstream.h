@@ -30,6 +30,10 @@ public:
 private:
     vector<char> bytes;
     vector<bool> bits;
+public:
+    const vector<bool, allocator<bool>> &getBits() const;
+
+private:
 
     char bit2byte(array<bool, 8>);
 

@@ -69,3 +69,7 @@ void Bitstream::finalizeBits() {
     Bitstream::appendByte(Bitstream::bit2byte(bytecache));
     Bitstream::bits.empty();
 }
+
+const vector<bool, allocator<bool>> &Bitstream::getBits() const {
+    return bits;
+}

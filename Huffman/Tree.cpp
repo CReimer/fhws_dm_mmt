@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include "Tree.h"
 
-string Tree::generateHuffman(string input) {
+Bitstream Tree::generateHuffman(string input) {
     Tree::inputString = input;
     string tableBase = sortInputElements(input);
     Tree::generateDictionary(tableBase);
@@ -44,36 +44,34 @@ void Tree::generateDictionary(string sorted) {
     }
 }
 
-string Tree::encodeHuffman(string input) {
-    string output;
+Bitstream Tree::encodeHuffman(string input) {
+    Bitstream output;
     for (char character: input) {
         TreeElement *current = Tree::basis;
         while (current->isRightSet()) {
             if (current->getLeft() == character) {
-                output += '1';
+                output.appendBit(1);
                 break;
             } else {
-                output += '0';
+                output.appendBit(0);
                 current = current->getRight();
             }
         }
-//        cout << character << " " << output << endl;
     }
     return output;
 }
 
-string Tree::decodeHuffman(string input) {
+string Tree::decodeHuffman(Bitstream input) {
     string output;
     TreeElement *current = Tree::basis;
-    for (char character: input) {
-        if (character == '0') {
-            current = current->getRight();
-        }
-        else {
+    for (bool character: input.getBits()) {
+        if (character) {
             output += current->getLeft();
             current = Tree::basis;
+        } else {
+            current = current->getRight();
         }
 
     }
-    return std::__cxx11::string();
+    return output;
 }

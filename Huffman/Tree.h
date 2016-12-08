@@ -7,6 +7,7 @@
 
 #include <string>
 #include "TreeElement.h"
+#include "../Bitstream.h"
 
 using namespace std;
 
@@ -21,10 +22,13 @@ private:
 
     TreeElement *basis;
 
-    void encodeHuffman(string);
+    Bitstream encodeHuffman(string);
+
 
 public:
-    void generateHuffman(string);
+    Bitstream generateHuffman(string);
+
+    string decodeHuffman(Bitstream);
 };
 
 

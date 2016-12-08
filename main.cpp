@@ -65,7 +65,8 @@ vector<vector<Subsample>> subsample420(vector<vector<YCbCrPixel>> input) {
 
 int main() {
     Tree test;
-    string ddd = test.generateHuffman("Dies ist ein Teststring");
+
+    Bitstream ddd = test.generateHuffman("Dies ist ein Teststring");
     test.decodeHuffman(ddd);
 
 

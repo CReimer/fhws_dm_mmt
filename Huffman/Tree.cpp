@@ -4,120 +4,113 @@
 
 #include <algorithm>
 #include <iostream>
-#include <unordered_map>
 #include "Tree.h"
-
-Tree::Tree() {
-    Tree::basis = new TreeElement();
-}
-
-string Tree::sortInputElements(string input) {
-    unordered_map<char, unsigned int> count;
-
-    string output;
-
-    for (char character : input) {
-        if (!count[character]) {
-            output += character;
-        }
-        count[character]++;
-    }
-
-    std::sort(std::begin(output), std::end(output),
-              [&](const char &lhs, const char &rhs) {
-                  return count[lhs] > count[rhs];
-              }
-    );
-    return output;
-}
-
-void Tree::generateDictionary() {
-    string sorted = sortInputElements(Tree::inputString);
-    TreeElement *current = Tree::basis;
-    for (char character: sorted) {
-        TreeElement *next = new TreeElement;
-        current->setValue(character);
-        current->setRight(next);
-        current = next;
-    }
-}
 
 Bitstream Tree::encodeHuffman() {
     Bitstream output;
+
     for (char character: Tree::inputString) {
-        TreeElement *current = Tree::basis;
-        TreeElement *tempBase = Tree::basis;
-        while (current->isValueSet()) {
-            if (current->getValue() == character) {
+        for (char bit: Tree::encodingMap[character]) {
+            if (bit == '1') {
                 output.appendBit(1);
-                break;
+                cout << "1";
             } else {
                 output.appendBit(0);
-                if (current->isRightSet()) {
-                    current = current->getRight();
-                } else {
-                    current = tempBase;
-                    if (tempBase->isLeftSet())
-                        tempBase = tempBase->getLeft();
-                }
-
+                cout << "0";
             }
         }
-
     }
+//    cout << Tree::encodingMap[(char) '\0'];
+//    cout << std::endl;
     Tree::huffman = output;
     return output;
 }
 
 string Tree::decodeHuffman() {
+
     string output;
-    TreeElement *current = Tree::basis;
+    TreeNode *current = Tree::priorityQueue[0];
     for (bool character: Tree::huffman.getBits()) {
+
         if (character) {
-            output += current->getValue();
-            current = Tree::basis;
-        } else {
             current = current->getRight();
+        } else {
+            current = current->getLeft();
         }
 
+        if (!current->isLeftSet() && !current->isRightSet()) {
+            output += current->getCharacter();
+            current = Tree::priorityQueue[0];
+        }
     }
     return output;
 }
 
-void Tree::setInputString(const string &inputString) {
-    Tree::inputString = inputString;
+void Tree::sortPriorityQueue() {
+    // Bring priorityQueue in the right order
+    std::sort(std::begin(Tree::priorityQueue), std::end(Tree::priorityQueue),
+              [&](TreeNode *lhs, TreeNode *rhs) {
+                  return lhs->getFrequency() >= rhs->getFrequency();
+              }
+    );
 }
 
-void Tree::setHuffman(const Bitstream &huffman) {
-    Tree::huffman = huffman;
-}
-
-void Tree::generateDictionary(int maxDepth) {
-    int currentDepth = 0;
-    string sorted = sortInputElements(Tree::inputString);
-    TreeElement *current = Tree::basis;
-    for (char character: sorted) {
-        TreeElement *next = new TreeElement;
-        current->setValue(character);
-
-        if (currentDepth >= maxDepth) {
-            TreeElement *temp = Tree::basis;
-            currentDepth = 0;
-            while (temp->isLeftSet()) {
-                temp = temp->getLeft();
-                currentDepth++;
-                if (currentDepth >= maxDepth) {
-                    throw "No space left";
-                }
+void Tree::setInputString(string input) {
+    Tree::inputString = input;
+    // Push characters in queue or increase frequency
+    for (char character:input) {
+        bool found = false;
+        for (TreeNode *current: Tree::priorityQueue) {
+            if (current->getCharacter() == character) {
+                current->increaseFrequency();
+                found = true;
+                break;
             }
-            temp->setLeft(next);
-            current = temp->getLeft();
-//            currentDepth++;
-
-        } else {
-            current->setRight(next);
-            current = next;
         }
-        currentDepth++;
+        if (found) continue;
+        TreeNode *newNode = new TreeNode(character);
+        Tree::priorityQueue.push_back(newNode);
+    }
+    // EOF
+//    Tree::priorityQueue.push_back(new TreeNode((char) '\0'));
+    Tree::sortPriorityQueue();
+
+//    for (TreeNode* current: Tree::priorityQueue) {
+//        cout << current->getCharacter() << ":   " << (int)current->getFrequency() << std::endl;
+//    }
+}
+
+void Tree::generateHuffmanTree() {
+
+    while (Tree::priorityQueue.size() > 1) {
+        TreeNode *newNode = new TreeNode();
+        newNode->setLeft(Tree::priorityQueue.back());
+        Tree::priorityQueue.pop_back();
+        newNode->setRight(Tree::priorityQueue.back());
+        Tree::priorityQueue.pop_back();
+
+        newNode->setFrequency(newNode->getLeft()->getFrequency() + newNode->getRight()->getFrequency());
+        Tree::priorityQueue.push_back(newNode);
+        Tree::sortPriorityQueue();
+    }
+
+}
+
+void Tree::generateHuffmanEncodingMap() {
+    Tree::encodingMapWorker(Tree::priorityQueue[0], "");
+}
+
+void Tree::encodingMapWorker(TreeNode *input, string bits) {
+    if (input->isLeftSet()) {
+        Tree::encodingMapWorker(input->getLeft(), bits + '0');
+    }
+
+    if (input->isRightSet()) {
+        Tree::encodingMapWorker(input->getRight(), bits + '1');
+    }
+
+    if (!input->isRightSet() && !input->isLeftSet()) {
+        Tree::encodingMap[input->getCharacter()] = bits;
+        cout << bits << ":    " << input->getCharacter() << std::endl;
     }
 }

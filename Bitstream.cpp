@@ -44,7 +44,7 @@ char Bitstream::bit2byte(array<bool, 8> bits) {
         bitset.set(i, bits[i]);
     }
     cout << bitset.to_string();
-    char byte = static_cast<unsigned char>( bitset.to_ulong() );
+    char byte = static_cast<unsigned char>( bitset.to_ulong());
     return byte;
 
 }

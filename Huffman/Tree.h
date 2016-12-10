@@ -6,36 +6,36 @@
 #define DM_MMT_TREE_H
 
 #include <string>
-#include "TreeElement.h"
+#include <unordered_map>
 #include "../Bitstream.h"
+#include "TreeNode.h"
 
 using namespace std;
 
-
-
 class Tree {
 private:
+    void sortPriorityQueue();
 
     string inputString;
 
-    string sortInputElements(string);
-
-    TreeElement *basis;
-
     Bitstream huffman;
+
+    vector<TreeNode *> priorityQueue;
+
+    unordered_map<char, string> encodingMap;
+
+    void encodingMapWorker(TreeNode *, string bits);
+
 public:
-    Tree();
+    void setInputString(string input);
 
     Bitstream encodeHuffman();
 
-    void generateDictionary();
-    void generateDictionary(int maxDepth);
-
     string decodeHuffman();
 
-    void setHuffman(const Bitstream &huffman);
+    void generateHuffmanTree();
 
-    void setInputString(const string &inputString);
+    void generateHuffmanEncodingMap();
 };
 
 

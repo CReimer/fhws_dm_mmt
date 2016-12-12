@@ -7,6 +7,7 @@
 
 
 #include "Bitstream.h"
+#include "Huffman/Tree.h"
 
 using namespace std;
 
@@ -21,6 +22,8 @@ public:
     void setSoi();
 
     void setEoi();
+
+    void setDht(Tree huffman);
 
 private:
     Bitstream *bitstream;

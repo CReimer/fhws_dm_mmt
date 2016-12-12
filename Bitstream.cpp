@@ -50,6 +50,7 @@ char Bitstream::bit2byte(array<bool, 8> bits) {
 }
 
 void Bitstream::appendByte(char byte) {
+//    cout << "Byte: " << std::hex << (unsigned int)byte << std::endl;
     Bitstream::bytes.push_back(byte);
 }
 

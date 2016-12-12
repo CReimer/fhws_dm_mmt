@@ -13,20 +13,20 @@ void Jpeg::setSof0(int x, int y, int sampleY, int sampleCb, int sampleCr) {
 
     vector<unsigned char> height = vector<unsigned char>(2);
     if (y > 255) {
-        height[0] = (unsigned char)(y >> 8 & 0xFF);
-        height[1] = (unsigned char)(y & 0xFF);
+        height[0] = (unsigned char) (y >> 8 & 0xFF);
+        height[1] = (unsigned char) (y & 0xFF);
     } else {
         height[0] = 0x00;
-        height[1] = (unsigned char)y;
+        height[1] = (unsigned char) y;
     }
 
     vector<unsigned char> width = vector<unsigned char>(2);
     if (x > 255) {
-        width[0] = (unsigned char)(x >> 8 & 0xFF);
-        width[1] = (unsigned char)(x & 0xFF);
+        width[0] = (unsigned char) (x >> 8 & 0xFF);
+        width[1] = (unsigned char) (x & 0xFF);
     } else {
         width[0] = 0x00;
-        width[1] = (unsigned char)x;
+        width[1] = (unsigned char) x;
     }
     vector<unsigned char> componentCount = {3};
     char by = (char) sqrt(sampleY);
@@ -97,5 +97,50 @@ void Jpeg::writeArray(vector<unsigned char> array) {
     for (int i = 0; i < array.size(); i++) {
 //        cout << array[i] << "\n";
         Jpeg::bitstream->appendByte((char) array[i]);
+    }
+}
+
+void Jpeg::setDht(Tree huffman) {
+    char header[2] = {(char) 0xFF, (char) 0xC4};
+    Jpeg::bitstream->appendByte(header[0]);
+    Jpeg::bitstream->appendByte(header[1]);
+
+    //TODO
+    vector<char> temporary;
+    int size = 0;
+//    char size;
+
+    char type = 0x00; //TODO 00=Y, 01=Cb+Cr
+    temporary.push_back(type);
+    size++;
+
+
+    unordered_map<int, vector<char>> input = huffman.getCountedCharMap();
+    for (char i = 1; i <= 16; i++) {
+//        int test = input[i].size();
+        if (input[i].size() > 0) {
+            temporary.push_back((char)input[i].size());
+        }
+        else {
+            temporary.push_back(0);
+        }
+        size++;
+    }
+
+    for (int i = 1; i < 16; i++) {
+        if (input[i].size() > 0) {
+            for (char element: input[i]) {
+                size++;
+                temporary.push_back(element);
+            }
+
+        }
+    }
+
+    Jpeg::writeArray({0x00,(char)size});
+    size+=2;
+//    Jpeg::bitstream->appendByte(size);
+    for (char current: temporary) {
+        Jpeg::bitstream->appendByte(current);
     }
 }

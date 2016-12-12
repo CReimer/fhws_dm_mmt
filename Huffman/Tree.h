@@ -23,6 +23,7 @@ private:
     vector<TreeNode *> priorityQueue;
 
     unordered_map<char, string> encodingMap;
+    unordered_map<int, vector<char>> countedCharMap;
 
     void encodingMapWorker(TreeNode *, string bits);
 
@@ -36,6 +37,10 @@ public:
     void generateHuffmanTree();
 
     void generateHuffmanEncodingMap();
+
+    const unordered_map<char, string> &getEncodingMap() const;
+
+    unordered_map<int, vector<char>> getCountedCharMap();
 };
 
 

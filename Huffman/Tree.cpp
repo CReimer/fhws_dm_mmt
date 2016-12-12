@@ -50,9 +50,22 @@ void Tree::sortPriorityQueue() {
     // Bring priorityQueue in the right order
     std::sort(std::begin(Tree::priorityQueue), std::end(Tree::priorityQueue),
               [&](TreeNode *lhs, TreeNode *rhs) {
-                  return lhs->getFrequency() >= rhs->getFrequency();
+                  if (lhs->getFrequency() >= rhs->getFrequency() || rhs->isLeftSet()) {
+                      return true;
+                  }
               }
     );
+    std::sort(std::begin(Tree::priorityQueue), std::end(Tree::priorityQueue),
+              [&](TreeNode *lhs, TreeNode *rhs) {
+                  if (lhs->getFrequency() >= rhs->getFrequency() || rhs->isLeftSet()) {
+                      return true;
+                  }
+              }
+    );
+    for (TreeNode* current: Tree::priorityQueue) {
+        cout << current->getCharacter() << " ";
+    }
+    cout << std::endl;
 }
 
 void Tree::setInputString(string input) {
@@ -75,8 +88,8 @@ void Tree::setInputString(string input) {
 //    Tree::priorityQueue.push_back(new TreeNode((char) '\0'));
     Tree::sortPriorityQueue();
 
-//    for (TreeNode* current: Tree::priorityQueue) {
-//        cout << current->getCharacter() << ":   " << (int)current->getFrequency() << std::endl;
+//    for (TreeNode *current: Tree::priorityQueue) {
+//        cout << current->getCharacter() << ":   " << (int) current->getFrequency() << std::endl;
 //    }
 }
 
@@ -102,15 +115,43 @@ void Tree::generateHuffmanEncodingMap() {
 
 void Tree::encodingMapWorker(TreeNode *input, string bits) {
     if (input->isLeftSet()) {
-        Tree::encodingMapWorker(input->getLeft(), bits + '0');
+        Tree::encodingMapWorker(input->getLeft(), bits + '1');
     }
 
     if (input->isRightSet()) {
-        Tree::encodingMapWorker(input->getRight(), bits + '1');
+        Tree::encodingMapWorker(input->getRight(), bits + '0');
     }
 
     if (!input->isRightSet() && !input->isLeftSet()) {
         Tree::encodingMap[input->getCharacter()] = bits;
         cout << bits << ":    " << input->getCharacter() << std::endl;
     }
+}
+
+const unordered_map<char, string> &Tree::getEncodingMap() const {
+    return encodingMap;
+}
+
+unordered_map<int, vector<char>> Tree::getCountedCharMap() {
+    unordered_map<char, bool> seen;
+    int maxLength = 0;
+    for (char character: Tree::inputString) {
+        if (!seen[character]) {
+            int length = (int) Tree::encodingMap[character].length();
+            if (maxLength < length) {
+                maxLength = length;
+            }
+            Tree::countedCharMap[length].push_back(character);
+            seen[character] = true;
+        }
+    }
+
+//    for (int i; i <= maxLength; i++) {
+//        if(!Tree::countedCharMap[i].size()>0) {
+//            vector<char> blub;
+//            Tree::countedCharMap[i] = blub;
+//        }
+//    }
+
+    return Tree::countedCharMap;
 }

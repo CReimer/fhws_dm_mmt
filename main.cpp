@@ -65,45 +65,29 @@ vector<vector<Subsample>> subsample420(vector<vector<YCbCrPixel>> input) {
 
 int main() {
     Tree test;
-    test.setInputString("test");
+    test.setInputString("11111222222222222222222223334444455666666666666666");
     test.generateHuffmanTree();
     test.generateHuffmanEncodingMap();
     test.encodeHuffman();
     cout << test.decodeHuffman() << std::endl;
 
 //    std::cout << "Hello, World!" << std::endl;
-//    Ppm PpmImageObj;
-//    PpmImageObj.readFile("test.ppm");
+    Ppm PpmImageObj;
+    PpmImageObj.readFile("test.ppm");
 
 //    vector<vector<RGBPixel>> picture = PpmImageObj.getRgbImage();
 //    vector<vector<YCbCrPixel>> ypicture = PpmImageObj.getYCbCrImage();
 //    subsample420(ypicture);
 
-//    Bitstream emptyStream;
-//    Jpeg jpegGenerator(&emptyStream);
-//    jpegGenerator.setSoi();
-//    jpegGenerator.setApp0();
-//    jpegGenerator.setSof0(PpmImageObj.getX(), PpmImageObj.getY(),4,2,2);
-//    jpegGenerator.setEoi();
-//    emptyStream.writeFile(("./test2.jpg"));
+    Bitstream emptyStream;
+    Jpeg jpegGenerator(&emptyStream);
+    jpegGenerator.setSoi();
+    jpegGenerator.setApp0();
+    jpegGenerator.setSof0(PpmImageObj.getX(), PpmImageObj.getY(),4,2,2);
+    jpegGenerator.setDht(test);
+    jpegGenerator.setEoi();
+    emptyStream.writeFile(("./test2.jpg"));
 
-//    Bitstream test;
-//    test.appendBit(1);
-//    test.appendBit(0);
-//    test.appendBit(1);
-//    test.appendBit(0);
-//    test.appendBit(1);
-//    test.appendBit(0);
-//    test.appendBit(1);
-//    test.appendBit(0);
-//
-//    test.appendBit(1);
-//    test.appendBit(0);
-//    test.appendBit(1);
-//    test.appendBit(0);
-//    test.appendBit(1);
-//    test.appendBit(0);
-//    test.finalizeBits();
 //    test.readFile("./test.ppm");
 //    test.writeFile("./test2.ppm");
 

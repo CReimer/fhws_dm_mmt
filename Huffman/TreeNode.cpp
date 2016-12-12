@@ -2,13 +2,14 @@
 // Created by christopher on 09.12.16.
 //
 
+#include <cstring>
 #include "TreeNode.h"
 
 void TreeNode::setCharacter(char character) {
     TreeNode::character = character;
 }
 
-void TreeNode::setFrequency(char frequency) {
+void TreeNode::setFrequency(unsigned long frequency) {
     TreeNode::frequency = frequency;
 }
 
@@ -22,18 +23,25 @@ void TreeNode::increaseFrequency() {
 
 TreeNode::TreeNode(char character) : character(character) {
     TreeNode::frequency = 1;
+    TreeNode::left = NULL;
+    TreeNode::right = NULL;
     TreeNode::leftSet = false;
     TreeNode::rightSet = false;
 }
 
-char TreeNode::getFrequency() const {
+unsigned long TreeNode::getFrequency() const {
+    if (!frequency) {
+        return 0;
+    }
     return frequency;
 }
 
 TreeNode::TreeNode() {
-//    TreeNode::frequency = 1;
-//    TreeNode::leftSet = false;
-//    TreeNode::rightSet = false;
+    TreeNode::frequency = NULL;
+    TreeNode::left = NULL;
+    TreeNode::right = NULL;
+    TreeNode::leftSet = false;
+    TreeNode::rightSet = false;
 }
 
 void TreeNode::setLeft(TreeNode *left) {

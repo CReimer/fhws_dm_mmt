@@ -48,20 +48,24 @@ string Tree::decodeHuffman() {
 
 void Tree::sortPriorityQueue() {
     // Bring priorityQueue in the right order
-    std::sort(std::begin(Tree::priorityQueue), std::end(Tree::priorityQueue),
+    std::stable_sort(std::begin(Tree::priorityQueue), std::end(Tree::priorityQueue),
               [&](TreeNode *lhs, TreeNode *rhs) {
-                  if (lhs->getFrequency() >= rhs->getFrequency() || rhs->isLeftSet()) {
-                      return true;
+                  if(lhs && rhs) {
+                      if (lhs->getFrequency() >= rhs->getFrequency() || rhs->isLeftSet()) {
+                          return true;
+                      }
                   }
               }
     );
-    std::sort(std::begin(Tree::priorityQueue), std::end(Tree::priorityQueue),
-              [&](TreeNode *lhs, TreeNode *rhs) {
-                  if (lhs->getFrequency() >= rhs->getFrequency() || rhs->isLeftSet()) {
-                      return true;
-                  }
-              }
-    );
+//    std::sort(std::begin(Tree::priorityQueue), std::end(Tree::priorityQueue),
+//              [&](TreeNode *lhs, TreeNode *rhs) {
+//                  if(lhs && rhs) {
+//                      if (lhs->getFrequency() >= rhs->getFrequency() || rhs->isLeftSet()) {
+//                          return true;
+//                      }
+//                  }
+//              }
+//    );
     for (TreeNode* current: Tree::priorityQueue) {
         cout << current->getCharacter() << " ";
     }
@@ -124,7 +128,7 @@ void Tree::encodingMapWorker(TreeNode *input, string bits) {
 
     if (!input->isRightSet() && !input->isLeftSet()) {
         Tree::encodingMap[input->getCharacter()] = bits;
-        cout << bits << ":    " << input->getCharacter() << std::endl;
+        cout << bits << ":    "<< std::hex  << (int)input->getCharacter() << std::endl;
     }
 }
 

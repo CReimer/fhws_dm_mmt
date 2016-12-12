@@ -9,7 +9,7 @@
 class TreeNode {
 private:
     char character;
-    char frequency;
+    unsigned long frequency;
 
     TreeNode *left;
     bool leftSet;
@@ -23,13 +23,13 @@ public:
 
     void setCharacter(char character);
 
-    void setFrequency(char frequency);
+    void setFrequency(unsigned long frequency);
 
     char getCharacter() const;
 
     void increaseFrequency();
 
-    char getFrequency() const;
+    unsigned long getFrequency() const;
 
     void setLeft(TreeNode *left);
 

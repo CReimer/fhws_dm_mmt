@@ -65,7 +65,8 @@ vector<vector<Subsample>> subsample420(vector<vector<YCbCrPixel>> input) {
 
 int main() {
     Tree test;
-    test.setInputString("11111222222222222222222223334444455666666666666666");
+//    test.setInputString("11111222222222222222222223334444455666666666666666");
+    test.setInputString("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
     test.generateHuffmanTree();
     test.generateHuffmanEncodingMap();
     test.encodeHuffman();

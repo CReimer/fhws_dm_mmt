@@ -69,8 +69,10 @@ int main() {
     test.setInputString("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
     test.generateHuffmanTree();
     test.generateHuffmanEncodingMap();
-    test.encodeHuffman();
-    cout << test.decodeHuffman() << std::endl;
+    test.lengthLimitedTree(3);
+    test.getSecondary()->generateHuffmanTree();
+//    test.encodeHuffman();
+//    cout << test.decodeHuffman() << std::endl;
 
 //    std::cout << "Hello, World!" << std::endl;
     Ppm PpmImageObj;

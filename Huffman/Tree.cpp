@@ -29,7 +29,7 @@ Bitstream Tree::encodeHuffman() {
 string Tree::decodeHuffman() {
 
     string output;
-    TreeNode *current = Tree::priorityQueue[0];
+    TreeNode *current = Tree::treeBaseNode;
     for (bool character: Tree::huffman.getBits()) {
 
         if (character) {
@@ -40,7 +40,7 @@ string Tree::decodeHuffman() {
 
         if (!current->isLeftSet() && !current->isRightSet()) {
             output += current->getCharacter();
-            current = Tree::priorityQueue[0];
+            current = Tree::treeBaseNode;
         }
     }
     return output;
@@ -49,13 +49,13 @@ string Tree::decodeHuffman() {
 void Tree::sortPriorityQueue() {
     // Bring priorityQueue in the right order
     std::stable_sort(std::begin(Tree::priorityQueue), std::end(Tree::priorityQueue),
-              [&](TreeNode *lhs, TreeNode *rhs) {
-                  if(lhs && rhs) {
-                      if (lhs->getFrequency() >= rhs->getFrequency() || rhs->isLeftSet()) {
-                          return true;
-                      }
-                  }
-              }
+                     [&](TreeNode *lhs, TreeNode *rhs) {
+                         if (lhs && rhs) {
+                             if (lhs->getFrequency() >= rhs->getFrequency() || rhs->isLeftSet()) {
+                                 return true;
+                             }
+                         }
+                     }
     );
 //    std::sort(std::begin(Tree::priorityQueue), std::end(Tree::priorityQueue),
 //              [&](TreeNode *lhs, TreeNode *rhs) {
@@ -66,7 +66,7 @@ void Tree::sortPriorityQueue() {
 //                  }
 //              }
 //    );
-    for (TreeNode* current: Tree::priorityQueue) {
+    for (TreeNode *current: Tree::priorityQueue) {
         cout << current->getCharacter() << " ";
     }
     cout << std::endl;
@@ -110,11 +110,12 @@ void Tree::generateHuffmanTree() {
         Tree::priorityQueue.push_back(newNode);
         Tree::sortPriorityQueue();
     }
+    Tree::treeBaseNode = Tree::priorityQueue[0];
 
 }
 
 void Tree::generateHuffmanEncodingMap() {
-    Tree::encodingMapWorker(Tree::priorityQueue[0], "");
+    Tree::encodingMapWorker(Tree::treeBaseNode, "");
 }
 
 void Tree::encodingMapWorker(TreeNode *input, string bits) {
@@ -128,9 +129,10 @@ void Tree::encodingMapWorker(TreeNode *input, string bits) {
 
     if (!input->isRightSet() && !input->isLeftSet()) {
         Tree::encodingMap[input->getCharacter()] = bits;
-        cout << bits << ":    "<< std::hex  << (int)input->getCharacter() << std::endl;
+        cout << bits << ":    " << std::hex << (int) input->getCharacter() << std::endl;
     }
 }
+
 
 const unordered_map<char, string> &Tree::getEncodingMap() const {
     return encodingMap;
@@ -158,4 +160,48 @@ unordered_map<int, vector<char>> Tree::getCountedCharMap() {
 //    }
 
     return Tree::countedCharMap;
+}
+
+void Tree::lengthLimitedTree(unsigned int max_level) {
+    Tree::lengthLimitedWorker(Tree::treeBaseNode, max_level, 0);
+}
+
+void Tree::lengthLimitedWorker(TreeNode *input, unsigned int level, unsigned int current_level) {
+    if (current_level == level) {
+        if (input->isLeftSet()) {
+            Tree::secondary->addToPriorityQueue(input->getLeft());
+            input->unsetLeft();
+        }
+
+        if (input->isRightSet()) {
+            Tree::secondary->addToPriorityQueue(input->getRight());
+            input->unsetRight();
+        }
+    } else {
+        if (input->isLeftSet()) {
+            Tree::lengthLimitedWorker(input->getLeft(), level, current_level + 1);
+        }
+
+        if (input->isRightSet()) {
+            Tree::lengthLimitedWorker(input->getRight(), level, current_level + 1);
+        }
+    }
+
+
+}
+
+void Tree::addToPriorityQueue(TreeNode *newElement) {
+    Tree::priorityQueue.push_back(newElement);
+}
+
+Tree::Tree(bool isSecondary) {
+    // Don't initialize secondary tree here to avoid segfault
+}
+
+Tree::Tree() {
+    Tree::secondary = new Tree(true);
+}
+
+Tree *Tree::getSecondary() const {
+    return secondary;
 }

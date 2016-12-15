@@ -43,6 +43,8 @@ public:
 
     bool isRightSet() const;
 
+    void unsetRight();
+    void unsetLeft();
 
 };
 

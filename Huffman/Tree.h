@@ -22,12 +22,22 @@ private:
 
     vector<TreeNode *> priorityQueue;
 
+    TreeNode* treeBaseNode;
+
     unordered_map<char, string> encodingMap;
     unordered_map<int, vector<char>> countedCharMap;
 
     void encodingMapWorker(TreeNode *, string bits);
 
+    void lengthLimitedWorker(TreeNode *, unsigned int level, unsigned int current_level);
+
+    Tree* secondary;
+
 public:
+    Tree(bool);
+
+    Tree();
+
     void setInputString(string input);
 
     Bitstream encodeHuffman();
@@ -41,6 +51,14 @@ public:
     const unordered_map<char, string> &getEncodingMap() const;
 
     unordered_map<int, vector<char>> getCountedCharMap();
+
+    void lengthLimitedTree(unsigned int);
+
+    void addToPriorityQueue(TreeNode*);
+
+    Tree *getSecondary() const;
+
+
 };
 
 

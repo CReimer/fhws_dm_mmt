@@ -70,3 +70,14 @@ bool TreeNode::isRightSet() const {
     return rightSet;
 }
 
+void TreeNode::unsetLeft() {
+    TreeNode::left = NULL;
+    TreeNode::leftSet = false;
+}
+
+void TreeNode::unsetRight() {
+    TreeNode::right = NULL;
+    TreeNode::rightSet = false;
+
+}
+

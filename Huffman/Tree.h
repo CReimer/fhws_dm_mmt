@@ -33,6 +33,10 @@ private:
 
     Tree* secondary;
 
+    void attachYStar(TreeNode* yp, TreeNode* parentOfYp);
+
+    void findYpAndParent(int);
+
 public:
     Tree(bool);
 
@@ -58,6 +62,7 @@ public:
 
     Tree *getSecondary() const;
 
+    TreeNode *getTreeBaseNode() const;
 
 };
 

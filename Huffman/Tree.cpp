@@ -186,8 +186,6 @@ void Tree::lengthLimitedWorker(TreeNode *input, unsigned int level, unsigned int
             Tree::lengthLimitedWorker(input->getRight(), level, current_level + 1);
         }
     }
-
-
 }
 
 void Tree::addToPriorityQueue(TreeNode *newElement) {
@@ -205,3 +203,72 @@ Tree::Tree() {
 Tree *Tree::getSecondary() const {
     return secondary;
 }
+
+TreeNode *Tree::getTreeBaseNode() const {
+    return treeBaseNode;
+}
+
+//wie der name vermuten lässt, setzt diese methode den knoten y* zwischen yp und dessen parent
+void Tree::attachYStar(TreeNode* yp, TreeNode* parentOfYp) {
+    TreeNode* yStar;
+
+    //schauen ob beim Parent yp links oder rechts ist. dann ersetzen durch y*
+    if (parentOfYp->getLeft() == yp) {
+        parentOfYp->setLeft(yStar);
+    }
+    if (parentOfYp->getRight() == yp) {
+        parentOfYp->setRight(yStar);
+    }
+
+    //in y* dann wieder auf yp verweisen. (ehrlich gesagt, gerade nicht sicher ob links oder rechts relevant ist...)
+    yStar->setRight(yp);
+
+
+    //je nachdem ob yp and y* links oder rechts angehängt wurde, wird an die andere seite der secondary tree angehängt.
+    yStar->setLeft(Tree::secondary->getTreeBaseNode());
+
+    //edit:  hab am ende bewusst left und right so verteilt. gedanke dahinter, dass der main tree nach rechts geht.
+    //	und da yp zuerst da war, setze ich es als "main" part nach rechts. hoffe da passt.
+
+};
+
+void Tree::findYpAndParent(int max_level) {
+    TreeNode* yp;
+    TreeNode* yStar;
+    TreeNode* parent;
+    TreeNode* depthCount = Tree::secondary->getTreeBaseNode();
+    int depthOfSecondary = 0;
+    int depthOfYp = 0;
+    //todo:		yp und parent ausfindig machen.
+    //wie?		in T1 mit der Formel die entsprechende höhe ermitteln und dann den Knoten mit dem "minimum weight" (Maximum frequency?) nehmen.
+
+    //geht durch den Secondary Tree um dessen tiefe zu bestimmen.
+    while (depthCount->isRightSet()) {
+        depthOfSecondary++;
+        depthCount = depthCount->getRight();
+    }
+
+    depthOfYp = max_level - depthOfSecondary - 1;
+
+    //sonderfall, bei dem y* oben an den baum gesetzt wird.	(kein parent vorhanden... ja, hier stelle ich gerade die bennenung der methode in frage^^)
+    if (depthOfYp == 0) {
+        yStar->setLeft(Tree::secondary->getTreeBaseNode());
+        yStar->setRight(treeBaseNode);
+    }
+    else {
+
+        //parent mit baum wurzel initialisieren, und dann immer durch die tiefere ebene ersetzen.
+        parent = treeBaseNode;
+        while (depthOfYp > 1) {
+            parent = parent->getRight();
+            depthOfYp--;
+        }
+
+        //yp noch aus dem parent ziehen.
+        yp = parent->getRight();
+
+        attachYStar(yp, parent);
+
+    };
+
+};

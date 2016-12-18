@@ -8,6 +8,7 @@
 #include "Bitstream.h"
 #include "Jpeg.h"
 #include "Huffman/Tree.h"
+#include "DCT/DiscreteCosineTransformation.h"
 
 using namespace std;
 
@@ -64,35 +65,51 @@ vector<vector<Subsample>> subsample420(vector<vector<YCbCrPixel>> input) {
 }
 
 int main() {
-    Tree test;
+//    Tree test;
 //    test.setInputString("11111222222222222222222223334444455666666666666666");
-    test.setInputString("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
-    test.generateHuffmanTree();
-    test.generateHuffmanEncodingMap();
-    test.lengthLimitedTree(3);
-    test.getSecondary()->generateHuffmanTree();
+//    test.setInputString(
+//            "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
+//    test.generateHuffmanTree();
+//    test.generateHuffmanEncodingMap();
+//    test.lengthLimitedTree(3);
+//    test.getSecondary()->generateHuffmanTree();
 //    test.encodeHuffman();
 //    cout << test.decodeHuffman() << std::endl;
 
 //    std::cout << "Hello, World!" << std::endl;
-    Ppm PpmImageObj;
-    PpmImageObj.readFile("test.ppm");
+//    Ppm PpmImageObj;
+//    PpmImageObj.readFile("test.ppm");
 
 //    vector<vector<RGBPixel>> picture = PpmImageObj.getRgbImage();
 //    vector<vector<YCbCrPixel>> ypicture = PpmImageObj.getYCbCrImage();
 //    subsample420(ypicture);
 
-    Bitstream emptyStream;
-    Jpeg jpegGenerator(&emptyStream);
-    jpegGenerator.setSoi();
-    jpegGenerator.setApp0();
-    jpegGenerator.setSof0(PpmImageObj.getX(), PpmImageObj.getY(),4,2,2);
-    jpegGenerator.setDht(test);
-    jpegGenerator.setEoi();
-    emptyStream.writeFile(("./test2.jpg"));
+//    Bitstream emptyStream;
+//    Jpeg jpegGenerator(&emptyStream);
+//    jpegGenerator.setSoi();
+//    jpegGenerator.setApp0();
+//    jpegGenerator.setSof0(PpmImageObj.getX(), PpmImageObj.getY(), 4, 2, 2);
+//    jpegGenerator.setDht(test);
+//    jpegGenerator.setEoi();
+//    emptyStream.writeFile(("./test2.jpg"));
 
 //    test.readFile("./test.ppm");
 //    test.writeFile("./test2.ppm");
+
+    vector<vector<float>> testBlockA;
+
+    testBlockA = {{255, 255, 255, 255, 255, 255, 255, 255},
+                  {255, 255, 255, 255, 255, 255, 255, 255},
+                  {255, 255, 255, 255, 255, 255, 255, 255},
+                  {255, 255, 255, 255, 255, 255, 255, 255},
+                  {255, 255, 255, 255, 255, 255, 255, 255},
+                  {255, 255, 255, 255, 255, 255, 255, 255},
+                  {255, 255, 255, 255, 255, 255, 255, 255},
+                  {255, 255, 255, 255, 255, 255, 255, 255}};
+
+    vector<vector<float>> dct = DiscreteCosineTransformation::dct(testBlockA);
+    vector<vector<float>> idct = DiscreteCosineTransformation::idct(dct);
+
 
     return 0;
 }

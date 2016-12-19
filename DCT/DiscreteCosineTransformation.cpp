@@ -200,5 +200,5 @@ vector<vector<float>> DiscreteCosineTransformation::dctArai(vector<vector<float>
         input[7][y] = z11 - z4;
     }
 
-    return vector<vector<float>>();
+    return input;
 }

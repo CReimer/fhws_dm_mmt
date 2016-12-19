@@ -107,7 +107,15 @@ int main() {
                   {255, 255, 255, 255, 255, 255, 255, 255},
                   {255, 255, 255, 255, 255, 255, 255, 255}};
 
-    vector<vector<float>> dct = DiscreteCosineTransformation::dct(testBlockA);
+    vector<vector<float>> dct = DiscreteCosineTransformation::dctArai(testBlockA);
+
+    for (int x = 0; x < 8; x++) {
+        for (int y = 0; y < 8; y++) {
+            cout << (int) dct[x][y] << "   ";
+        }
+        cout << std::endl;
+    }
+
     vector<vector<float>> idct = DiscreteCosineTransformation::idct(dct);
 
 

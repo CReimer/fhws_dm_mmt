@@ -40,6 +40,7 @@ vector<vector<float>> DiscreteCosineTransformation::idct(vector<vector<float>> i
 }
 
 vector<vector<float>> DiscreteCosineTransformation::dctDirect(vector<vector<float>> input) {
+    // Based on: http://www.winfotex.de/die-diskrete-kosinus-transformation-dct/
     int n = (int) input.size();
     double ca;
     double cb;
@@ -77,7 +78,7 @@ vector<vector<float>> DiscreteCosineTransformation::dctDirect(vector<vector<floa
 }
 
 vector<vector<float>> DiscreteCosineTransformation::dctSeparated(vector<vector<float>> input) {
-
+    // Based on: http://stackoverflow.com/questions/8310749/discrete-cosine-transform-dct-implementation-c
     vector<vector<float>> output = input;
 
     int sizeX = (int) input.size();

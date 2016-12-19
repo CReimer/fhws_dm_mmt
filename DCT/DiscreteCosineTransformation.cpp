@@ -80,34 +80,65 @@ vector<vector<float>> DiscreteCosineTransformation::dctDirect(vector<vector<floa
     return output;
 }
 
-vector<vector<float>> DiscreteCosineTransformation::dctSeparated(vector<vector<float>> input) {
-    // Based on: http://stackoverflow.com/questions/8310749/discrete-cosine-transform-dct-implementation-c
-    vector<vector<float>> output = input;
+float graph(float x) {
+    return (cos((x * PI) / 16) / 2);
+}
 
-    int N = (int) input.size();
+vector<vector<float>> DiscreteCosineTransformation::dctSeparated(vector<vector<float>> A) {
+    // Based on: http://www.whydomath.org/node/wavlets/dct.html
+    vector<vector<float>> B = A;
+    vector<vector<float>> C = A;
+    vector<vector<float>> U = A;
 
-    int k, n, u, v;
-    for (u = 0; u < N; u++) {
-        for (v = 0; v < N; v++) {
-            output[u][v] = 0;
-            for (k = 0; k < N; k++) {
+    int N = (int) A.size();
 
-//                float c0 = 1;
-//                if (k == 0) {
-//                    c0 = (float) (1 / sqrt(2));
-//                }
+    float a = (float) ((sqrt(2) / 2) / 2);
+    for(int i = 0; i < 8; i++)
+    {
+        U[i][0] = a;
+    }
 
-                for (n = 0; n < N; n++) {
-//                    output[u][v] = c0 * sqrt(2 / N) * cos((2 * n + 1) * k * PI / 2 * N);
 
-                    output[u][v] += input[u][v] * cos(PI / ((float) N) * (u + 1. / 2.) * u) *
-                                    cos(PI / ((float) N) * (v + 1. / 2.) * v);
 
-                }
-            }
+    for(int i = 1; i < 8; i++)
+    {
+        U[0][i] = graph(i);
+        U[1][i] = graph(3 * i);
+        U[2][i] = graph(5 * i);
+        U[3][i] = graph(7 * i);
+        U[4][i] = graph(9 * i);
+        U[5][i] = graph(11 * i);
+        U[6][i] = graph(13 * i);
+        U[7][i] = graph(15 * i);
+    }
+    
+    
+    
+//    for (int k = 0; k < N; k++) {
+//        float c0 = 1;
+//        if (k == 0) {
+//            c0 = (float) (1 / sqrt(2));
+//        }
+//        for (int n = 0; n < N; n++) {
+//            U[k][n] = c0 * sqrt(2 / N) * cos((2 * n + 1) * k * PI / 2 * N);
+//        }
+//    }
+
+    //C = UA
+    for (int x = 0; x < N; x++) {
+        for (int y=0; y <N; y++) {
+            C[x][y] = U[x][y] * A[x][y];
         }
     }
-    return output;
+
+    //B = CU^T
+    for (int x = 0; x < N; x++) {
+        for (int y=0; y <N; y++) {
+            B[x][y] = C[x][y] * U[y][x]; // x and y switched
+        }
+    }
+
+    return B;
 }
 
 vector<vector<float>> DiscreteCosineTransformation::dctArai(vector<vector<float>> input) {

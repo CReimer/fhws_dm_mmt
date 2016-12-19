@@ -69,7 +69,7 @@ vector<vector<float>> DiscreteCosineTransformation::dctDirect(vector<vector<floa
             else
                 cb = 1.0;
 
-            output[a][b] = tmpXab;
+            output[a][b] = (float) ((2.0 / n) * ca * cb * tmpXab);
             tmpXab = 0.0;
         }
     }

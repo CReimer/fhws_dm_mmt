@@ -114,10 +114,10 @@ vector<vector<float>> DiscreteCosineTransformation::dctSeparated(vector<vector<f
     int N = (int) A.size();
 
     float a = (float) (1 / sqrt(2));
+
     for (int i = 0; i < 8; i++) {
         U[i][0] = a;
     }
-
     for (int i = 1; i < 8; i++) {
         U[0][i] = graph(i);
         U[1][i] = graph(3 * i);
@@ -129,6 +129,10 @@ vector<vector<float>> DiscreteCosineTransformation::dctSeparated(vector<vector<f
         U[7][i] = graph(15 * i);
     }
 
+
+    for (int i = 0; i < 8; i++) {
+        UT[0][i] = a;
+    }
     for (int i = 1; i < 8; i++) {
         UT[i][0] = graph(i);
         UT[i][1] = graph(3 * i);

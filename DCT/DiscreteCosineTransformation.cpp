@@ -49,30 +49,30 @@ vector<vector<float>> DiscreteCosineTransformation::dctDirect(vector<vector<floa
 
     vector<vector<float>> output = input;
 
-    for (int a = 0; a < n; a++) {                                        //erste Schleife für C(a)
-        for (int b = 0; b < n; b++) {                                    //zweite Schleife für C(b)
+    for (int i = 0; i < n; i++) {                                        //erste Schleife für C(i)
+        for (int j = 0; j < n; j++) {                                    //zweite Schleife für C(j)
             for (int x = 0; x < n; x++) {                                //dritte Schleife für x
                 for (int y = 0; y < n; y++) {                            //vierte Schleife für y
                     cmpnt = input[x][y] *                                //X(x,y); Komponente der Transformation
-                            cos(((2.0 * x + 1.0) * a * PI) / (2.0 * n)) *    //erste Klammer
-                            cos(((2.0 * y + 1.0) * b * PI) / (2.0 * n));    //zweite Klammer
+                            cos(((2.0 * x + 1.0) * i * PI) / (2.0 * n)) *    //erste Klammer
+                            cos(((2.0 * y + 1.0) * j * PI) / (2.0 * n));    //zweite Klammer
                     tmpXab += cmpnt;                                    //Summierung von X
                     cmpnt = 0.0;
                 }
             }
-            //Abfr*age, ob k gleich oder ungleich 0; Entscheidung ob C(n) 1 oder (1/Wurzel(2)) ist
-            //C(a)
-            if (a == 0)
+            //Abfrage, ob n gleich oder ungleich 0; Entscheidung ob C(n) 1 oder (1/Wurzel(2)) ist
+            //C(i)
+            if (i == 0)
                 ca = (1.0 / sqrt(2.0));
             else
                 ca = 1.0;
-            //C(b)
-            if (b == 0)
+            //C(j)
+            if (j == 0)
                 cb = (1.0 / sqrt(2.0));
             else
                 cb = 1.0;
 
-            output[a][b] = (float) ((2.0 / n) * ca * cb * tmpXab);        //Y(a,b)
+            output[i][j] = (float) ((2.0 / n) * ca * cb * tmpXab);        //Y(i,j)
             tmpXab = 0.0;
         }
     }

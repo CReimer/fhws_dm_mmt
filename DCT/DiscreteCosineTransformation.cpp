@@ -84,24 +84,41 @@ float graph(float x) {
     return (cos((x * PI) / 16) / 2);
 }
 
+vector<vector<float>> multiplyMatrix(vector<vector<float>> matrixA, vector<vector<float>> matrixB) {
+    int prod = (int) matrixA.size();
+    int row = (int) matrixA[0].size();
+    int column = (int) matrixB.size();
+
+    vector<vector<float>> matrixC = matrixA;
+
+
+    for (int c = 0; c < column; c++) {
+        for (int r = 0; r < row; r++) {
+            for (int ab = 0; ab < prod; ab++) {
+                matrixC[c][r] = matrixC[c][r] + (matrixA[ab][r] * matrixB[c][ab]);
+            }
+        }
+    }
+
+    return matrixC;
+}
+
+
 vector<vector<float>> DiscreteCosineTransformation::dctSeparated(vector<vector<float>> A) {
     // Based on: http://www.whydomath.org/node/wavlets/dct.html
     vector<vector<float>> B = A;
     vector<vector<float>> C = A;
     vector<vector<float>> U = A;
+    vector<vector<float>> UT = A;
 
     int N = (int) A.size();
 
-    float a = (float) ((sqrt(2) / 2) / 2);
-    for(int i = 0; i < 8; i++)
-    {
+    float a = (float) (1 / sqrt(2));
+    for (int i = 0; i < 8; i++) {
         U[i][0] = a;
     }
 
-
-
-    for(int i = 1; i < 8; i++)
-    {
+    for (int i = 1; i < 8; i++) {
         U[0][i] = graph(i);
         U[1][i] = graph(3 * i);
         U[2][i] = graph(5 * i);
@@ -111,9 +128,19 @@ vector<vector<float>> DiscreteCosineTransformation::dctSeparated(vector<vector<f
         U[6][i] = graph(13 * i);
         U[7][i] = graph(15 * i);
     }
-    
-    
-    
+
+    for (int i = 1; i < 8; i++) {
+        UT[i][0] = graph(i);
+        UT[i][1] = graph(3 * i);
+        UT[i][2] = graph(5 * i);
+        UT[i][3] = graph(7 * i);
+        UT[i][4] = graph(9 * i);
+        UT[i][5] = graph(11 * i);
+        UT[i][6] = graph(13 * i);
+        UT[i][7] = graph(15 * i);
+    }
+
+
 //    for (int k = 0; k < N; k++) {
 //        float c0 = 1;
 //        if (k == 0) {
@@ -125,19 +152,21 @@ vector<vector<float>> DiscreteCosineTransformation::dctSeparated(vector<vector<f
 //    }
 
     //C = UA
-    for (int x = 0; x < N; x++) {
-        for (int y=0; y <N; y++) {
-            C[x][y] = U[x][y] * A[x][y];
-        }
-    }
+    C = multiplyMatrix(U, A);
+//    for (int x = 0; x < N; x++) {
+//        for (int y = 0; y < N; y++) {
+//            C[x][y] = U[x][y] * A[y][x];
+//        }
+//    }
 
     //B = CU^T
-    for (int x = 0; x < N; x++) {
-        for (int y=0; y <N; y++) {
-            B[x][y] = C[x][y] * U[y][x]; // x and y switched
-        }
-    }
-
+    B = multiplyMatrix(C, UT);
+//    for (int x = 0; x < N; x++) {
+//        for (int y = 0; y < N; y++) {
+//            B[x][y] = C[x][y] * U[x][y]; // x and y switched
+//        }
+//    }
+//
     return B;
 }
 

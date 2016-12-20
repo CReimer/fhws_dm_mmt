@@ -39,6 +39,71 @@ vector<vector<float>> DiscreteCosineTransformation::idct(vector<vector<float>> i
     return output;
 }
 
+float graph(float x) {
+    return (cos((float) (x * PI) / 16) / 2);
+}
+
+vector<vector<float>> multiplyMatrix(vector<vector<float>> matrixA, vector<vector<float>> matrixB) {
+    int prod = (int) matrixA.size();
+    int row = (int) matrixA[0].size();
+    int column = (int) matrixB.size();
+
+    vector<vector<float>> matrixC = matrixA;
+
+    float temp = 0;
+    for (int c = 0; c < column; c++) {
+        for (int r = 0; r < row; r++) {
+            for (int ab = 0; ab < prod; ab++) {
+                temp = temp + (matrixA[ab][r] * matrixB[c][ab]);
+            }
+            matrixC[c][r] = temp;
+            temp = 0;
+        }
+    }
+
+    return matrixC;
+}
+
+vector<vector<float>> DiscreteCosineTransformation::inverseSeparated(vector<vector<float>> A) {
+    // Based on: http://www.whydomath.org/node/wavlets/dct.html
+    vector<vector<float>> B = A;
+    vector<vector<float>> C = A;
+    vector<vector<float>> U = A;
+    vector<vector<float>> UT = A;
+
+    //constants
+    float N = A.size();
+    float C0 = (float)(1.0 / sqrt(2.0));
+    float a = (float)sqrt(2.0 / N);
+    float b = (float) (2.0 * N);
+
+    //Define U
+    for (int k = 0; k < N; k++)
+    {
+        for (int n = 0; n < N; n++)
+        {
+            U[n][k] = (float) (((k == 0) ? C0 : 1) * a * cos(((2.0 * n) + 1.0) * ((k * PI) / b)));
+        }
+    }
+
+    //Define UT
+    for (int k = 0; k < N; k++)
+    {
+        for (int n = 0; n < N; n++)
+        {
+            UT[k][n] = (float) (((k == 0) ? C0 : 1) * a * cos(((2.0 * n) + 1.0) * ((k * PI) / b)));
+        }
+    }
+
+    //C = UA
+    C = multiplyMatrix(UT, A);
+
+    //B = CU^T
+    B = multiplyMatrix(C, U);
+
+    return B;
+}
+
 vector<vector<float>> DiscreteCosineTransformation::dctDirect(vector<vector<float>> input) {
     // Based on: http://www.winfotex.de/die-diskrete-kosinus-transformation-dct/
     int n = (int) input.size();
@@ -80,97 +145,46 @@ vector<vector<float>> DiscreteCosineTransformation::dctDirect(vector<vector<floa
     return output;
 }
 
-float graph(float x) {
-    return (cos((float) (x * PI) / 16) / 2);
-}
 
-vector<vector<float>> multiplyMatrix(vector<vector<float>> matrixA, vector<vector<float>> matrixB) {
-    int prod = (int) matrixA.size();
-    int row = (int) matrixA[0].size();
-    int column = (int) matrixB.size();
-
-    vector<vector<float>> matrixC = matrixA;
-
-
-    for (int c = 0; c < column; c++) {
-        for (int r = 0; r < row; r++) {
-            for (int ab = 0; ab < prod; ab++) {
-                matrixC[c][r] = matrixC[c][r] + (matrixA[ab][r] * matrixB[c][ab]);
-            }
-        }
-    }
-
-    return matrixC;
-}
 
 
 vector<vector<float>> DiscreteCosineTransformation::dctSeparated(vector<vector<float>> A) {
     // Based on: http://www.whydomath.org/node/wavlets/dct.html
-    vector<vector<float>> B(8, vector<float>(8));
-    vector<vector<float>> C(8, vector<float>(8));
-    vector<vector<float>> U(8, vector<float>(8));
-    vector<vector<float>> UT(8, vector<float>(8));
+    vector<vector<float>> B = A;
+    vector<vector<float>> C = A;
+    vector<vector<float>> U = A;
+    vector<vector<float>> UT = A;
 
-//    int N = (int) A.size();
+    //constants
+    float N = A.size();
+    float C0 = (float)(1.0 / sqrt(2.0));
+    float a = (float)sqrt(2.0 / N);
+    float b = (float) (2.0 * N);
 
-    float a = (float) (1 / sqrt(2));
-
-    for (int i = 0; i < 8; i++) {
-        U[i][0] = a;
-    }
-    for (int i = 1; i < 8; i++) {
-        U[0][i] = graph(i);
-        U[1][i] = graph(3 * i);
-        U[2][i] = graph(5 * i);
-        U[3][i] = graph(7 * i);
-        U[4][i] = graph(9 * i);
-        U[5][i] = graph(11 * i);
-        U[6][i] = graph(13 * i);
-        U[7][i] = graph(15 * i);
+    //Define U
+    for (int k = 0; k < N; k++)
+    {
+        for (int n = 0; n < N; n++)
+        {
+            U[n][k] = (float) (((k == 0) ? C0 : 1) * a * cos(((2.0 * n) + 1.0) * ((k * PI) / b)));
+        }
     }
 
-
-    for (int i = 0; i < 8; i++) {
-        UT[0][i] = a;
+    //Define UT
+    for (int k = 0; k < N; k++)
+    {
+        for (int n = 0; n < N; n++)
+        {
+            UT[k][n] = (float) (((k == 0) ? C0 : 1) * a * cos(((2.0 * n) + 1.0) * ((k * PI) / b)));
+        }
     }
-    for (int i = 1; i < 8; i++) {
-        UT[i][0] = graph(i);
-        UT[i][1] = graph(3 * i);
-        UT[i][2] = graph(5 * i);
-        UT[i][3] = graph(7 * i);
-        UT[i][4] = graph(9 * i);
-        UT[i][5] = graph(11 * i);
-        UT[i][6] = graph(13 * i);
-        UT[i][7] = graph(15 * i);
-    }
-
-
-//    for (int k = 0; k < N; k++) {
-//        float c0 = 1;
-//        if (k == 0) {
-//            c0 = (float) (1 / sqrt(2));
-//        }
-//        for (int n = 0; n < N; n++) {
-//            U[k][n] = c0 * sqrt(2 / N) * cos((2 * n + 1) * k * PI / 2 * N);
-//        }
-//    }
 
     //C = UA
     C = multiplyMatrix(U, A);
-//    for (int x = 0; x < N; x++) {
-//        for (int y = 0; y < N; y++) {
-//            C[x][y] = U[x][y] * A[y][x];
-//        }
-//    }
 
     //B = CU^T
     B = multiplyMatrix(C, UT);
-//    for (int x = 0; x < N; x++) {
-//        for (int y = 0; y < N; y++) {
-//            B[x][y] = C[x][y] * U[x][y]; // x and y switched
-//        }
-//    }
-//
+
     return B;
 }
 

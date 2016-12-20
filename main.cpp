@@ -9,6 +9,9 @@
 #include "Jpeg.h"
 #include "Huffman/Tree.h"
 #include "DCT/DiscreteCosineTransformation.h"
+#include "DCT/DctSeparate.h"
+#include "DCT/DctDirect.h"
+#include "DCT/DctArai.h"
 
 using namespace std;
 
@@ -82,7 +85,7 @@ int main() {
 
 //    vector<vector<RGBPixel>> picture = PpmImageObj.getRgbImage();
 //    vector<vector<YCbCrPixel>> ypicture = PpmImageObj.getYCbCrImage();
-//    subsample420(ypicture);
+//    vector<vector<Subsample>> subsample = subsample420(ypicture);
 
 //    Bitstream emptyStream;
 //    Jpeg jpegGenerator(&emptyStream);
@@ -96,28 +99,32 @@ int main() {
 //    test.readFile("./test.ppm");
 //    test.writeFile("./test2.ppm");
 
-    vector<vector<float>> testBlockA;
+    Eigen::MatrixXd testBlockA(8, 8);
+    testBlockA <<
+               100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100;
+    Eigen::MatrixXd testBlockB(8, 8);
+    testBlockB <<
+               47, 18, 13, 16, 41, 90, 47, 27,
+            62, 42, 35, 39, 66, 90, 41, 26,
+            71, 55, 56, 67, 55, 40, 22, 39,
+            53, 60, 63, 50, 48, 25, 37, 87,
+            31, 27, 33, 27, 37, 50, 81, 147,
+            54, 31, 33, 46, 58, 104, 144, 179,
+            76, 70, 71, 91, 118, 151, 176, 184,
+            102, 105, 115, 124, 135, 168, 173, 181;
 
-    testBlockA = {{255, 255, 255, 255, 255, 255, 255, 255},
-                  {255, 255, 255, 255, 255, 255, 255, 255},
-                  {255, 255, 255, 255, 255, 255, 255, 255},
-                  {255, 255, 255, 255, 255, 255, 255, 255},
-                  {255, 255, 255, 255, 255, 255, 255, 255},
-                  {255, 255, 255, 255, 255, 255, 255, 255},
-                  {255, 255, 255, 255, 255, 255, 255, 255},
-                  {255, 255, 255, 255, 255, 255, 255, 255}};
+    DctSeparate *dctsep = new DctSeparate();
+    DctDirect *dctdir = new DctDirect();
+    DctArai *dctarai = new DctArai();
 
-    vector<vector<float>> dct = DiscreteCosineTransformation::dctArai(testBlockA);
-
-    for (int x = 0; x < 8; x++) {
-        for (int y = 0; y < 8; y++) {
-            cout << (int) dct[x][y] << "   ";
-        }
-        cout << std::endl;
-    }
-
-    vector<vector<float>> idct = DiscreteCosineTransformation::idct(dct);
-
-
-    return 0;
+    Eigen::MatrixXd dct = dctarai->Transform(testBlockB);
+    Eigen::MatrixXd idct = dctsep->Reverse(dct);
+    cout << dct << std::endl << std::endl;
 }

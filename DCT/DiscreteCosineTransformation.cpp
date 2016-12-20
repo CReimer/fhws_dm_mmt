@@ -13,7 +13,7 @@ vector<vector<float>> DiscreteCosineTransformation::idct(vector<vector<float>> i
     int sizeX = (int) input.size();
     int sizeY = (int) input[0].size();
 
-    vector<vector<float>> output = input;
+    vector<vector<float>> output(8, vector<float>(8));;
 
     int i, j, u, v;
     for (u = 0; u < sizeX; ++u) {
@@ -28,8 +28,8 @@ vector<vector<float>> DiscreteCosineTransformation::idct(vector<vector<float>> i
 
             for (i = 1; i < sizeX; i++) {
                 for (j = 1; j < sizeY; j++) {
-                    output[u][v] += input[i][j] * cos(PI / ((float) sizeX) * (u + 1. / 2.) * i) *
-                                    cos(PI / ((float) sizeY) * (v + 1. / 2.) * j);
+                    output[u][v] += input[i][j] * cos((float) (PI / sizeX * (u + 1. / 2.) * i)) *
+                                    cos((float) (PI / sizeY * (v + 1. / 2.) * j));
                 }
             }
             output[u][v] *= 2. / ((float) sizeX) * 2. / ((float) sizeY);
@@ -54,21 +54,21 @@ vector<vector<float>> DiscreteCosineTransformation::dctDirect(vector<vector<floa
             for (int x = 0; x < n; x++) {                                //dritte Schleife für x
                 for (int y = 0; y < n; y++) {                            //vierte Schleife für y
                     cmpnt = input[x][y] *                                //X(x,y); Komponente der Transformation
-                            cos(((2.0 * x + 1.0) * i * PI) / (2.0 * n)) *    //erste Klammer
-                            cos(((2.0 * y + 1.0) * j * PI) / (2.0 * n));    //zweite Klammer
+                            cos((float)(((2.0 * x + 1.0) * i * PI) / (2.0 * n))) *    //erste Klammer
+                            cos((float)(((2.0 * y + 1.0) * j * PI) / (2.0 * n)));    //zweite Klammer
                     tmpXab += cmpnt;                                    //Summierung von X
-                    cmpnt = 0.0;
+//                    cmpnt = 0.0;
                 }
             }
             //Abfrage, ob n gleich oder ungleich 0; Entscheidung ob C(n) 1 oder (1/Wurzel(2)) ist
             //C(i)
             if (i == 0)
-                ca = (1.0 / sqrt(2.0));
+                ca = (1.0 / sqrt(2.0f));
             else
                 ca = 1.0;
             //C(j)
             if (j == 0)
-                cb = (1.0 / sqrt(2.0));
+                cb = (1.0 / sqrt(2.0f));
             else
                 cb = 1.0;
 
@@ -81,7 +81,7 @@ vector<vector<float>> DiscreteCosineTransformation::dctDirect(vector<vector<floa
 }
 
 float graph(float x) {
-    return (cos((x * PI) / 16) / 2);
+    return (cos((float) (x * PI) / 16) / 2);
 }
 
 vector<vector<float>> multiplyMatrix(vector<vector<float>> matrixA, vector<vector<float>> matrixB) {
@@ -106,12 +106,12 @@ vector<vector<float>> multiplyMatrix(vector<vector<float>> matrixA, vector<vecto
 
 vector<vector<float>> DiscreteCosineTransformation::dctSeparated(vector<vector<float>> A) {
     // Based on: http://www.whydomath.org/node/wavlets/dct.html
-    vector<vector<float>> B = A;
-    vector<vector<float>> C = A;
-    vector<vector<float>> U = A;
-    vector<vector<float>> UT = A;
+    vector<vector<float>> B(8, vector<float>(8));
+    vector<vector<float>> C(8, vector<float>(8));
+    vector<vector<float>> U(8, vector<float>(8));
+    vector<vector<float>> UT(8, vector<float>(8));
 
-    int N = (int) A.size();
+//    int N = (int) A.size();
 
     float a = (float) (1 / sqrt(2));
 
